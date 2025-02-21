@@ -2,7 +2,6 @@ import { BB } from '../../../bb/bb';
 import { LANG, languageStrings, LS_LANGUAGE_KEY } from '../../../language/language';
 import { KL } from '../../kl';
 import { languages } from '../../../../languages/languages';
-import bitbofLogoImg from '/src/app/img/bitbof-logo.svg';
 import klecksLogoImg from '/src/app/img/klecks-logo.png';
 import uiSwapImg from '/src/app/img/ui/ui-swap-lr.svg';
 import { LocalStorage } from '../../../bb/base/local-storage';
@@ -192,80 +191,6 @@ export class SettingsUi {
             custom: {
                 tabIndex: '-1',
             },
-        });
-
-        // ---- about ----
-        this.rootEl.append(BB.el({ className: 'grid-hr', css: { margin: '10px 0' } }));
-
-        function makeLicenses() {
-            return BB.el({
-                tagName: 'a',
-                content: LANG('licenses'),
-                onClick: () => showLicensesDialog(),
-            });
-        }
-
-        if (customAbout) {
-            this.rootEl.append(customAbout);
-            if (!customAbout.innerHTML) {
-                const minimalAbout = BB.el({
-                    parent: customAbout,
-                    css: {
-                        textAlign: 'center',
-                    },
-                });
-                minimalAbout.append(
-                    BB.el({
-                        content: `<img alt="icon" height="20" style="vertical-align:middle" src="${bitbofLogoImg}"> <a href="https://bitbof.com" target="_blank" tabIndex="-1">bitbof</a> © 2024<br>`,
-                    }),
-                    makeLicenses(),
-                );
-            }
-        } else {
-            const versionEl = BB.el({
-                parent: this.rootEl,
-                css: {
-                    textAlign: 'center',
-                },
-                content: `
-<img alt="Klecks" class="dark-invert" height="25" src="${klecksLogoImg}"><br>
-<img alt="icon" height="20" style="vertical-align:middle" src="${bitbofLogoImg}"> <a href="https://bitbof.com" target="_blank" tabIndex="-1">bitbof</a> © 2024<br>`,
-            });
-
-            versionEl.append(
-                makeLicenses(),
-                document.createTextNode(' | '),
-                BB.el({
-                    tagName: 'a',
-                    content: LANG('donate'),
-                    custom: {
-                        href: 'https://kleki.com/donate/',
-                        target: '_blank',
-                    },
-                }),
-                document.createTextNode(' | '),
-                BB.el({
-                    tagName: 'a',
-                    content: LANG('source-code'),
-                    custom: {
-                        href: 'https://klecks.org',
-                        target: '_blank',
-                    },
-                }),
-            );
-        }
-
-        window.addEventListener('storage', (e) => {
-            if (e.key !== LS_LANGUAGE_KEY) {
-                return;
-            }
-            languageSelect.setValue(
-                nullToUndefined(
-                    LocalStorage.getItem(LS_LANGUAGE_KEY)
-                        ? LocalStorage.getItem(LS_LANGUAGE_KEY)
-                        : 'auto',
-                ),
-            );
         });
     }
 

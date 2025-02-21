@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- mocked drawing page -->
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Draw</title>
@@ -22,7 +22,7 @@
     - on continuing a drawing, read psd that was stored on server (klecks.readPsd -> klecks.openProject)
      */
 
-    const psdURL = 'example-drawing.psd';
+    const psdURL = '';
 
     let saveData = (function () {
         let a = document.createElement("a");
@@ -43,52 +43,35 @@
             // download png
             saveData(klecks.getPNG(), 'drawing.png');
 
-            /*// download psd
-            klecks.getPSD().then((blob) => {
-                saveData(blob, 'drawing.psd');
-            });*/
-
             setTimeout(() => {
                 onSuccess();
-                location.reload();
+            //    location.reload();
             }, 500);
         },
     });
 
-    if (psdURL) {
-        fetch(new Request(psdURL)).then(response => {
-            return response.arrayBuffer();
-        }).then(buffer => {
-            return klecks.readPSD(buffer); // resolves to Klecks project
-        }).then(project => {
-            klecks.openProject(project);
-        }).catch(e => {
-            klecks.initError('failed to read image');
-        });
+    klecks.openProject({
+        width: 800,
+        height: 2048,
+        layers: [{
+            name: 'Background',
+            isVisible: true,
+            opacity: 1,
+            mixModeStr: 'source-over',
+            image: (() => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 2048;
+                const ctx = canvas.getContext('2d');
+                ctx.save();
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.restore();
+                return canvas;
+            })(),
+        }]
+    });
 
-    } else {
-        klecks.openProject({
-            width: 100,
-            height: 100,
-            layers: [{
-                name: 'Background',
-                isVisible: true,
-                opacity: 1,
-                mixModeStr: 'source-over',
-                image: (() => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 100;
-                    canvas.height = 100;
-                    const ctx = canvas.getContext('2d');
-                    ctx.save();
-                    ctx.fillStyle = '#fff';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.restore();
-                    return canvas;
-                })(),
-            }]
-        });
-    }
 </script>
 <!-- embed end -->
 
